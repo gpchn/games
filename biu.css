@@ -1,0 +1,9 @@
+#app {
+	position: absolute;
+	left: 30%;
+	top: 50px;
+}
+
+.active {
+	opacity: 0.5;
+}
