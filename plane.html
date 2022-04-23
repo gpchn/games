@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Game</title>
+    </head>
+    <body>
+        <div>
+            <canvas id="gameCanvas"></canvas>
+        </div>
+        <button type="button" id="stopbtn">暂停/开始</button>
+        <span id="txt">分数：0</span>
+        <script type="text/javascript">
+            var can = document.getElementById("gameCanvas");
+            can.width = "600";
+            can.height = "900";
+            const ctx = can.getContext("2d");
+
+            class Sprite {
+                constructor(arg) {
+                    this.x = arg.x || 0;
+                    this.y = arg.y || 0;
+                    this.width = arg.width || 10;
+                    this.height = arg.height || 10;
+                    this.color = arg.color || "#ccc";
+                    this.list = [];
+                    this.parentNode = null;
+                }
+
+                append(sprite) {
+                    this.list.push(sprite);
+                    sprite.parentNode = this;
+                }
+
+                remove() {
+                    for (var x in this.parentNode.list) {
+                        if (this.parentNode.list[x] === this) {
+                            this.parentNode.list.splice(x, 1);
+                        }
+                    }
+                }
+
+                move(dt) {
+
+                }
+
+                collide(other) {
+
+                }
+
+                update(dt) {
+                    //移动
+                    this.move(dt);
+                    //碰撞检测
+                    if (this.parentNode) {
+                        for (var x in this.parentNode.list) {
+                            var item = this.parentNode.list[x];
+                            if (item !== this) {
+                                if (this.x > item.x - this.width && this.x < item.x + item.width) {
+                                    if (this.y > item.y - this.height && this.y < item.y + item.height) {
+                                        this.collide(item);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //绘制
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                    this.list.forEach(item => {
+                        item.update(dt);
+                    })
+                }
+            }
+
+            class enemy extends Sprite {
+                constructor(arg) {
+                    super(arg);
+                    this.speed = arg.speed || 10;
+                }
+                move(dt) {
+                    this.y += dt * this.speed;
+                    if (this.y > 920) {
+                        this.remove();
+                        end();
+                    }
+                }
+            }
+
+            class bullet extends Sprite {
+                constructor(arg) {
+                    super(arg);
+                    this.speed = arg.speed || 10;
+                }
+                move(dt) {
+                    this.y -= dt * this.speed;
+                    if (this.y < -20) {
+                        this.remove();
+                    }
+                }
+                collide(other) {
+                    other.remove();
+                    this.remove();
+                    count();
+                }
+            }
+
+            class Scene extends Sprite {
+                constructor(arg) {
+                    super(arg);
+                    this.spaceEnemy = 0.5;
+                    this.inter = null;
+                    this.timeEnemy = this.spaceEnemy;
+                }
+                move(dt) {
+                    this.timeEnemy -= dt;
+                    if (this.timeEnemy < 0) {
+                        this.createEnemy();
+                        this.timeEnemy = this.spaceEnemy;
+                    }
+                }
+                run() {
+                    this.inter = setInterval(() => {
+                        this.update(0.04);
+                    }, 40)
+                }
+                stop() {
+                    clearInterval(this.inter);
+                    this.inter = null;
+                }
+                createEnemy() {
+                    sc.append(new enemy({
+                        x: Math.floor(Math.random() * 50) * 10,
+                        y: -50,
+                        width: 30,
+                        height: 20,
+                        color: "#333",
+                        speed: 50 + Math.floor(Math.random() * 60)
+                    }));
+                }
+            }
+
+            var sc = new Scene({
+                width: 600,
+                height: 900
+            });
+
+            document.getElementById('stopbtn').onclick = function() {
+                if (sc.inter) {
+                    sc.stop()
+                } else {
+                    sc.run()
+                }
+            }
+            
+            var scoring = 0;
+            function count(){
+                scoring += 1;
+                document.getElementById('txt').innerText = "分数：" + scoring;
+            }
+            
+            function end(){
+                sc.stop()
+                document.getElementById('txt').innerText = "分数：" + scoring + " ==== 游戏结束";
+            }
+            
+            can.onclick = function(event) {
+                if (sc.inter) {
+                    var bu = new bullet({
+                        x: event.offsetX - 10,
+                        y: event.offsetY - 10,
+                        width: 20,
+                        height: 20,
+                        color: "#6cf",
+                        speed: 320
+                    })
+                    sc.append(bu);
+                }
+            }
+        </script>
+    </body>
+</html>
