@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>智学问答助手 · 基于AI的智能知识问答系统 | 科创作品方案</title>
+    <!-- 引入 Font Awesome 6 (免费图标库) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 引入 Mermaid 用于绘制架构图 -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: #f6f9fc;
+            color: #1a2c3e;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 头部 Hero */
+        .hero {
+            background: linear-gradient(135deg, #0b2b3b 0%, #1c4e6f 100%);
+            color: white;
+            padding: 3rem 0 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 2rem 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .hero .container {
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+        .hero .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        .hero-badge i {
+            margin-right: 6px;
+        }
+
+        /* 导航锚点 (简易) */
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        .nav-links a {
+            color: white;
+            background: rgba(255,255,255,0.15);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 通用卡片样式 */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease;
+            border: 1px solid #eef2f5;
+        }
+        .card:hover {
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #2c7da0;
+            padding-left: 1rem;
+            color: #0f3b4c;
+        }
+        .subsection-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #1e5a74;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subsection-title i {
+            color: #2c7da0;
+            font-size: 1.3rem;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        /* 表格样式 */
+        .tech-table, .time-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fefefe;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .tech-table th, .tech-table td, .time-table th, .time-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        .tech-table th, .time-table th {
+            background-color: #eef2fa;
+            font-weight: 600;
+            color: #1e4663;
+        }
+        .tech-table tr:last-child td, .time-table tr:last-child td {
+            border-bottom: none;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #c44536;
+        }
+        pre {
+            background: #1e2a36;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        .highlight {
+            background: #fef9e3;
+            border-left: 4px solid #f4b942;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+        .badge {
+            background: #e6f7f0;
+            color: #1f7840;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .mermaid-container {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #e2edf2;
+            margin-top: 2rem;
+            color: #5b7f92;
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 0 20px;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="container">
+        <h1><i class="fas fa-robot"></i> 智学问答助手</h1>
+        <div class="tagline">基于 AI 的交互式知识学习平台 · 多主题智能问答系统</div>
+        <div class="hero-badge"><i class="fas fa-graduation-cap"></i> 科创作品 | 可扩展校史/学科知识库 | AI个性化解析</div>
+        <div class="nav-links">
+            <a href="#overview"><i class="fas fa-info-circle"></i> 概述</a>
+            <a href="#tech"><i class="fas fa-code"></i> 技术栈</a>
+            <a href="#architecture"><i class="fas fa-project-diagram"></i> 架构</a>
+            <a href="#modules"><i class="fas fa-puzzle-piece"></i> 模块设计</a>
+            <a href="#ai"><i class="fas fa-brain"></i> AI集成</a>
+            <a href="#deploy"><i class="fas fa-cloud-upload-alt"></i> 部署</a>
+            <a href="#schedule"><i class="fas fa-clock"></i> 时间估算</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 1. 项目概述 -->
+    <section id="overview">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-bullhorn"></i> 项目概述</div>
+            <p><strong>项目名称：</strong>智学问答助手——基于 AI 的交互式知识学习平台</p>
+            <p><strong>目标：</strong>为学校师生打造一款智能问答学习工具，系统可根据所选主题（党史、校史、学科知识等）随机出题，用户作答后由 AI 实时判断对错并生成个性化解析，帮助巩固记忆、拓展知识。</p>
+            <div class="grid-2col" style="margin-top: 1rem;">
+                <div><i class="fas fa-lightbulb" style="color:#f4b942;"></i> <strong>核心价值</strong><br>“出题—答题—解析”闭环学习，融入学校特色内容，成为信息化教育创新载体。</div>
+                <div><i class="fas fa-chalkboard-teacher"></i> <strong>展示亮点</strong><br>AI教育应用 + 可扩展性设计，体现技术对学习方式的重构。</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 技术栈 -->
+    <section id="tech">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-laptop-code"></i> 技术栈</div>
+            <table class="tech-table">
+                <thead>
+                    <tr><th>层级</th><th>技术选型</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>前端</td><td>HTML5 / CSS3 / JavaScript (原生JS，轻量快速)</td></tr>
+                    <tr><td>后端</td><td>Vercel Serverless Functions (Python 3.9+)</td></tr>
+                    <tr><td>AI服务</td><td>第三方大语言模型API（免费/低成本，支持Qwen/GLM等中文优化模型）</td></tr>
+                    <tr><td>数据存储</td><td>多主题 JSON 文件（随代码部署，支持后期迁移PostgreSQL）</td></tr>
+                    <tr><td>部署平台</td><td>Vercel (前端静态托管 + 后端函数一体化)</td></tr>
+                    <tr><td>版本控制</td><td>Git + GitHub</td></tr>
+                </tbody>
+            </table>
+            <div class="highlight" style="margin-top: 1rem;">
+                <i class="fas fa-crown"></i> <strong>科创亮点</strong>：零服务器运维、完全Serverless架构，支持多主题知识库灵活扩展（党史/校史/学科知识）
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 系统架构 (mermaid) -->
+    <section id="architecture">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-project-diagram"></i> 系统架构</div>
+            <div class="mermaid-container">
+                <pre class="mermaid" style="background: transparent;">
+graph TD
+    A[用户浏览器] -->|请求题目| B[Vercel 前端静态资源]
+    B -->|API调用| C[Vercel Serverless Function]
+    C -->|读取题库| D[(多主题题库 JSON)]
+    C -->|调用AI| E[第三方LLM API<br/>Qwen/GLM等]
+    C -->|返回结果| B
+    B -->|渲染| A
+                </pre>
+            </div>
+            <p>前后端分离，业务逻辑（随机出题、判题、AI解析）均在函数内完成，无需自建服务器。通过环境变量动态配置AI模型及密钥，安全且易维护。</p>
+        </div>
+    </section>
+
+    <!-- 4. 模块设计（多主题题库管理+随机出题+判题+前端界面） -->
+    <section id="modules">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-puzzle-piece"></i> 模块设计</div>
+            
+            <div class="subsection-title"><i class="fas fa-database"></i> 4.1 多主题题库管理模块</div>
+            <p><strong>数据结构</strong>：每道题包含 <code>id</code>, <code>topic</code> (党史/校史/数学等), <code>question</code>, <code>options</code> (数组), <code>answer</code>, <code>explanation</code> (备选解析), <code>difficulty</code>。按主题分别存储为JSON文件，便于独立更新与扩展。</p>
+            <div class="highlight">示例：<code>data/party_history.json</code>，<code>data/school_history.json</code>，未来可加入学科题库。教师可直接编辑JSON文件添加新题。</div>
+            
+            <div class="subsection-title"><i class="fas fa-random"></i> 4.2 随机出题模块</div>
+            <p>后端 <code>GET /api/question/random?topic=party_history</code> 根据主题随机抽取题目；若不指定主题则从所有主题中随机选取。算法采用 <code>random.choice</code>，保证每次独立随机。</p>
+            
+            <div class="subsection-title"><i class="fas fa-check-circle"></i> 4.3 答题与判题模块</div>
+            <p>后端 <code>POST /api/answer/submit</code> 接收用户答案，比对正确答案后调用AI生成个性化解析，并返回正确性标记与解析文本。保底机制：AI失败时返回题库预置 <code>explanation</code>。</p>
+            
+            <div class="subsection-title"><i class="fas fa-tv"></i> 4.4 前端界面模块</div>
+            <p>单页应用风格，包含主题选择区、题目展示区、选项单选、提交按钮及结果区。支持“下一题”刷新，响应式设计融入学校文化元素（校徽、主题色）。</p>
+            <div class="highlight"><i class="fas fa-hand-pointer"></i> 交互流程：加载随机题 → 用户作答 → 提交 → 展示AI解析 → 下一题（保持主题）</div>
+        </div>
+    </section>
+
+    <!-- 5. 数据流程与接口设计 -->
+    <section>
+        <div class="card">
+            <div class="section-title"><i class="fas fa-exchange-alt"></i> 数据流程 & API设计</div>
+            <div class="grid-2col">
+                <div>
+                    <h4><i class="fas fa-arrow-right"></i> 获取随机题目</h4>
+                    <code>GET /api/question/random?topic=party_history</code>
+                    <pre>{
+  "id": 5,
+  "topic": "party_history",
+  "question": "中国共产党第一次全国代表大会在哪里召开？",
+  "options": ["北京","上海","广州","武汉"]
+}</pre>
+                </div>
+                <div>
+                    <h4><i class="fas fa-reply-all"></i> 提交答案</h4>
+                    <code>POST /api/answer/submit</code>
+                    <pre>{
+  "question_id": 5,
+  "topic": "party_history",
+  "user_answer": "上海"
+}</pre>
+                    <p><strong>响应示例</strong>：</p>
+                    <pre>{
+  "is_correct": true,
+  "explanation": "正确！中共一大于1921年在上海召开，后转移到嘉兴南湖。"
+}</pre>
+                </div>
+            </div>
+            <p>前端调用API后渲染结果，全程无状态，支持高并发。</p>
+        </div>
+    </section>
+
+    <!-- 6. AI集成详细设计 -->
+    <section id="ai">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-brain"></i> AI集成详细设计</div>
+            <div class="subsection-title"><i class="fas fa-robot"></i> 模型选择</div>
+            <p>推荐使用中文优化模型：<strong>Qwen/Qwen2.5-7B-Instruct</strong> 或 <strong>THUDM/glm-4-9b-chat</strong>，在事实性问答和解析生成上表现优异，免费额度满足中小规模使用。备选：<code>deepseek-ai/DeepSeek-R1-Distill-Qwen-7B</code>。</p>
+            
+            <div class="subsection-title"><i class="fas fa-code"></i> API调用封装（OpenAI兼容）</div>
+            <pre>import os, requests
+def call_llm(prompt: str) -> str:
+    api_key = os.environ.get("LLM_API_KEY")
+    base_url = os.environ.get("LLM_BASE_URL")
+    model = os.environ.get("LLM_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7,
+        "max_tokens": 300
+    }
+    resp = requests.post(f"{base_url}/chat/completions", json=payload, headers=headers, timeout=5)
+    return resp.json()["choices"][0]["message"]["content"] if resp.ok else ""</pre>
+            
+            <div class="subsection-title"><i class="fas fa-pen-fancy"></i> Prompt 设计</div>
+            <pre>你是一位知识渊博的老师，擅长用简洁准确的语言解释知识点。
+主题：{topic}
+题目：{question}
+选项：{options}
+正确答案：{correct_answer}
+用户答案：{user_answer}
+请输出：
+- 判断结果：正确/错误
+- 解析：（不超过100字，说明为什么对/错，并补充相关背景知识）</pre>
+            <div class="highlight"><i class="fas fa-shield-alt"></i> 容错与成本控制：设置max_tokens≤300，相同题目+相同答案短期缓存；若AI调用失败则降级使用题库预置解析。</div>
+        </div>
+    </section>
+
+    <!-- 7. 前端实现细节 + 部署方案 -->
+    <section id="deploy">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> 部署与项目结构</div>
+            <div class="grid-2col">
+                <div>
+                    <h4><i class="fas fa-folder-tree"></i> 项目结构</h4>
+                    <pre>project-root/
+├── api/
+│   ├── question/random.py
+│   └── answer/submit.py
+├── static/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── data/
+│   ├── party_history.json
+│   ├── school_history.json
+│   └── math.json
+├── utils/
+│   ├── llm.py
+│   └── question_loader.py
+├── vercel.json
+└── requirements.txt</pre>
+                </div>
+                <div>
+                    <h4><i class="fas fa-rocket"></i> Vercel 部署步骤</h4>
+                    <ol style="margin-left: 1.2rem;">
+                        <li>将代码推送至GitHub仓库</li>
+                        <li>在Vercel中导入项目，设置环境变量 <code>LLM_API_KEY</code>, <code>LLM_BASE_URL</code>, <code>LLM_MODEL</code></li>
+                        <li>点击Deploy，自动构建并生成可访问域名</li>
+                        <li>支持自定义域名绑定，展示给全校师生使用</li>
+                    </ol>
+                    <div class="badge" style="margin-top: 1rem;"><i class="fas fa-check"></i> 完全免费部署，无服务器维护成本</div>
+                </div>
+            </div>
+            <div class="subsection-title"><i class="fas fa-shield-virus"></i> 安全性考虑</div>
+            <p>输入校验（question_id合法性）、CORS同域无需额外配置、简单IP限流防止恶意请求、AI输出敏感词过滤，确保内容合规。</p>
+        </div>
+    </section>
+
+    <!-- 8. 测试与维护 -->
+    <section>
+        <div class="card">
+            <div class="section-title"><i class="fas fa-vial"></i> 测试与维护</div>
+            <ul style="margin-left: 1.5rem;">
+                <li><strong>单元测试</strong>：pytest 测试随机出题、判题逻辑、AI调用模拟。</li>
+                <li><strong>集成测试</strong>：Vercel CLI 本地模拟部署，端到端验证。</li>
+                <li><strong>监控日志</strong>：Vercel Functions 内置日志，自定义记录AI调用成功率和响应时长。</li>
+                <li><strong>题库更新</strong>：修改 <code>data/</code> 下JSON并重新部署；未来可开发管理后台在线维护。</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 9. 项目时间估算表 -->
+    <section id="schedule">
+        <div class="card">
+            <div class="section-title"><i class="fas fa-calendar-alt"></i> 项目时间估算</div>
+            <table class="time-table">
+                <thead><tr><th>阶段</th><th>任务</th><th>预估工时</th></tr></thead>
+                <tbody>
+                    <tr><td>需求分析与设计</td><td>明确功能，设计接口，多主题数据结构</td><td>0.5 天</td></tr>
+                    <tr><td>题库准备</td><td>整理党史、校史、学科知识等 100+ 题</td><td>2 天</td></tr>
+                    <tr><td>后端开发</td><td>随机出题、判题、AI 封装</td><td>1 天</td></tr>
+                    <tr><td>前端开发</td><td>页面布局、交互、API 对接</td><td>1 天</td></tr>
+                    <tr><td>测试与调试</td><td>单元测试、集成测试、AI 调优</td><td>1 天</td></tr>
+                    <tr><td>部署与文档</td><td>Vercel 部署，编写用户文档</td><td>0.5 天</td></tr>
+                    <tr style="background:#f0f6fa;"><td><strong>总计</strong></td><td colspan="2"><strong>6 天</strong>（可并行推进，快速落地）</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 10. 扩展与优化方向 -->
+    <section>
+        <div class="card">
+            <div class="section-title"><i class="fas fa-chart-line"></i> 扩展与优化方向</div>
+            <div class="grid-2col">
+                <div><i class="fas fa-user-plus"></i> <strong>用户系统</strong>：学习历史、错题本、积分排行榜</div>
+                <div><i class="fas fa-layer-group"></i> <strong>多题型支持</strong>：填空题、判断题、匹配题</div>
+                <div><i class="fas fa-magic"></i> <strong>动态题库生成</strong>：AI辅助生成题目+人工审核</div>
+                <div><i class="fas fa-chart-simple"></i> <strong>学习分析</strong>：正确率统计、薄弱知识点推送</div>
+                <div><i class="fas fa-school"></i> <strong>学校特色定制</strong>：校徽校训、校史专题挑战赛、校园主题色</div>
+                <div><i class="fas fa-microphone-alt"></i> <strong>语音交互</strong>：语音输入，便捷学习</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. 总结 -->
+    <section>
+        <div class="card" style="background: linear-gradient(120deg, #f0f9ff, #ffffff);">
+            <div class="section-title"><i class="fas fa-star-of-life"></i> 总结</div>
+            <p>本方案为学校科创作品设计了一款基于 AI 的智能知识问答系统，采用 Serverless 架构，支持多主题知识库（党史、校史、学科知识等），通过大语言模型实现智能判题与个性化解析。方案强调可扩展性，便于后续融入更多学校特色内容，既可作为信息技术与教育融合的创新实践，又能实际服务于师生学习需求。技术路线清晰、开发周期短、部署便捷，充分展现AI赋能教育的魅力。</p>
+            <div style="margin-top: 1rem; text-align: center;">
+                <i class="fas fa-check-circle" style="color:#2c7da0;"></i> 智学问答助手 — 让知识在问答中生长
+            </div>
+        </div>
+    </section>
+    <footer>
+        <i class="fas fa-code-branch"></i> 科创作品 · 智能知识问答系统 | 技术方案展示 | 支持党史/校史/学科知识动态扩展
+    </footer>
+</div>
+
+<script>
+    // 初始化 Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { background: '#f8fafc', primaryColor: '#2c7da0' } });
+</script>
+</body>
+</html>
