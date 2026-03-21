@@ -1,36 +1,114 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <style>
-      /* 简洁链接样式 */
-      a {
-        color: #2c7da0;        /* 柔和蓝色，护眼且现代 */
-        text-decoration: none; /* 移除默认下划线 */
-        transition: color 0.2s ease; /* 平滑颜色过渡 */
-      }
-      a:hover {
-        color: #1f5068;        /* 悬停时加深 */
-        text-decoration: underline; /* 悬停时显示下划线，保持可点性 */
-      }
-      /* 让链接列表更清晰，增加间距（极简调整，不干扰原有布局） */
-      body {
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        line-height: 1.5;
-        padding: 1rem;
-        margin: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <a href="https://gpchn.github.io/games/gobang.html">gobang</a><br>
-    <a href="https://gpchn.github.io/games/plane.html">plane</a><br>
-    <a href="https://gpchn.github.io/games/snake.html">snake</a><br>
-    <a href="https://gpchn.github.io/games/biu.html">biu</a><br>
-    <a href="https://gpchn.github.io/games/block.html">block</a><br>
-    <a href="/game.min.html">game.min.html</a><br>
-    <br>
-    <h1><a href="/kyj.html">科艺节方案</a></h1>
-    <h1><a href="/proj_ds.html">科艺节方案 - 党史问答</a></h1>
-  </body>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <style>
+    /* 全局样式：正式背景与舒适阅读 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f5f7fb;          /* 柔和灰底，正式感 */
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      line-height: 1.5;
+      padding: 2rem 1rem;
+      color: #1e293b;
+    }
+
+    /* 内容容器：居中，最大宽度，卡片背景 */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      padding: 2rem 1.5rem;
+    }
+
+    /* 所有链接基础样式 */
+    a {
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* 普通游戏链接：块级卡片风格 */
+    .game-link {
+      display: block;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1.05rem;
+      transition: transform 0.1s ease, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .game-link:hover {
+      border-color: #94a3b8;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    /* 科艺节方案标题链接（独立样式，更正式） */
+    .project-title {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px solid #eef2ff;
+    }
+
+    .project-title a {
+      display: block;
+      background: #f1f5f9;
+      border-left: 5px solid #2c7da0;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #0f3b4f;
+      transition: background 0.2s, border-left-color 0.2s;
+    }
+
+    .project-title a:hover {
+      background: #eef2ff;
+      border-left-color: #1f5068;
+    }
+
+    /* 保持原有br不影响美观（隐藏多余换行，但结构无损） */
+    br {
+      display: none;
+    }
+
+    /* 辅助分隔，让普通链接之间紧凑自然 */
+    .game-link:last-of-type {
+      margin-bottom: 0;
+    }
+
+    /* 针对第一个br前的普通链接已用块级，无需额外处理 */
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- 普通游戏链接 —— 原本用<br>分隔，现通过类名统一块级样式 -->
+  <a href="https://gpchn.github.io/games/gobang.html" class="game-link">🎮 五子棋 · gobang</a>
+  <a href="https://gpchn.github.io/games/plane.html" class="game-link">✈️ 飞机大战 · plane</a>
+  <a href="https://gpchn.github.io/games/snake.html" class="game-link">🐍 贪吃蛇 · snake</a>
+  <a href="https://gpchn.github.io/games/biu.html" class="game-link">🔫 biu · 射击小游戏</a>
+  <a href="https://gpchn.github.io/games/block.html" class="game-link">🧱 俄罗斯方块 · block</a>
+  <a href="/game.min.html" class="game-link">🎲 游戏聚合页 · game.min.html</a>
+
+  <!-- 科艺节方案（突出显示） -->
+  <div class="project-title">
+    <a href="/kyj.html">📄 科艺节方案</a>
+  </div>
+  <div class="project-title">
+    <a href="/proj_ds.html">📖 科艺节方案 - 党史问答</a>
+  </div>
+</div>
+</body>
 </html>
